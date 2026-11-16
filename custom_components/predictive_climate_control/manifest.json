@@ -1,0 +1,13 @@
+{
+  "domain": "predictive_climate_control",
+  "name": "Predictive Climate Control",
+  "after_dependencies": ["weather"],
+  "codeowners": ["@buddhra"],
+  "config_flow": true,
+  "documentation": "https://github.com/buddhra/predictive-climate-control",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/buddhra/predictive-climate-control/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
