@@ -28,6 +28,19 @@ Decision (2026-11-15): move the model into a Python integration in this repo, in
 
 Later candidates: a furnace term, a real mass state instead of an air average, scoring forecasts automatically.
 
+### Status
+
+Step 1 was done on 2026-11-15 from `docs/model.md`, because the legacy YAML was not readable in that session. One live check matched: at 8:45pm that day the model reproduced all four live sensors to 0.1 °F (a single step, at night, so the solar term was not exercised). These details were assumed and should be confirmed against the YAML or during step 2:
+
+- Air is carried between steps unrounded; only outputs are rounded.
+- The mass sensor updates at the top of the hour from its unrounded previous value, and starts at the current air temperature.
+- The fan's assumed power depends only on the starting indoor temperature.
+- Missing `cloud_coverage` or `uv_index` in a forecast entry counts as 0.
+- Snapshot curve state = the frozen curve's value at index `floor(hours since 21:02)`. This matches the legacy sensor at 8:01pm on 2026-11-15 (index 22).
+- The fan scenario subtracts a fixed 0.05 (`fan_alpha_reference`), not the closed rate. If step 4 lowers the closed rate, decide which was meant.
+
+For step 2, set the integration's optional mass entity to the legacy `sensor.indoor_thermal_mass_estimate` so the curves are comparable from the first refresh.
+
 ## Design requirements
 
 - **No house-specific values in code.** Entity IDs, setpoints, and coefficients belong in the config entry and its options. This repo is public.

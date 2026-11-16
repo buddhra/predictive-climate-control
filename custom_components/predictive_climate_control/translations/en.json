@@ -1,0 +1,98 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Predictive Climate Control",
+        "data": {
+          "indoor_entity": "Indoor temperature sensor",
+          "weather_entity": "Weather entity",
+          "mass_entity": "Thermal mass sensor (optional)"
+        },
+        "data_description": {
+          "indoor_entity": "The room the forecast is for.",
+          "weather_entity": "Must provide an hourly forecast.",
+          "mass_entity": "Leave empty to use this integration's own thermal mass estimate."
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Forecast settings",
+        "description": "Changes apply at once; no restart is needed. The formula is described in docs/model.md in the repository.",
+        "data": {
+          "indoor_entity": "Indoor temperature sensor",
+          "weather_entity": "Weather entity",
+          "mass_entity": "Thermal mass sensor (optional)",
+          "horizon_hour": "Horizon hour (local, 0-23)",
+          "alpha_outdoor": "Outdoor coupling, closed (per hour)",
+          "alpha_mass_to_air": "Mass-to-air coupling (per hour)",
+          "alpha_air_to_mass": "Air-to-mass coupling (per hour)",
+          "uv_coeff": "Solar gain per UV index point (°F)",
+          "solar_floor": "Solar floor peak (°F)",
+          "solar_center_hour": "Solar floor centre (hour of day)",
+          "solar_half_width_hours": "Solar floor half-width (hours)",
+          "vent_full_delta": "Indoor-outdoor difference for full venting (°F)",
+          "skylight_vent_alpha": "Extra coupling, skylights open",
+          "window_vent_alpha": "Extra coupling, skylights and windows open",
+          "fan_alpha_min": "Fan coupling at zero power",
+          "fan_alpha_span": "Fan coupling added at maximum power",
+          "fan_alpha_reference": "Fan coupling reference (subtracted)",
+          "fan_power_max": "Fan maximum power (W)",
+          "fan_power_warm": "Assumed fan power when warm (W)",
+          "fan_power_cool": "Assumed fan power when cool (W)",
+          "fan_warm_threshold": "Indoor temperature above which the fan is assumed warm-speed (°F)"
+        },
+        "data_description": {
+          "indoor_entity": "The room the forecast is for.",
+          "weather_entity": "Must provide an hourly forecast.",
+          "mass_entity": "Leave empty to use this integration's own thermal mass estimate."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "thermal_mass": {
+        "name": "Thermal mass estimate"
+      },
+      "live_closed": {
+        "name": "Live forecast: Closed"
+      },
+      "snapshot_curve_closed": {
+        "name": "Snapshot curve: Closed"
+      },
+      "snapshot_horizon_closed": {
+        "name": "Snapshot horizon value: Closed"
+      },
+      "live_skylights_open": {
+        "name": "Live forecast: Skylights open"
+      },
+      "snapshot_curve_skylights_open": {
+        "name": "Snapshot curve: Skylights open"
+      },
+      "snapshot_horizon_skylights_open": {
+        "name": "Snapshot horizon value: Skylights open"
+      },
+      "live_skylights_and_windows": {
+        "name": "Live forecast: Skylights and windows"
+      },
+      "snapshot_curve_skylights_and_windows": {
+        "name": "Snapshot curve: Skylights and windows"
+      },
+      "snapshot_horizon_skylights_and_windows": {
+        "name": "Snapshot horizon value: Skylights and windows"
+      },
+      "live_skylights_windows_fan": {
+        "name": "Live forecast: Skylights, windows, fan"
+      },
+      "snapshot_curve_skylights_windows_fan": {
+        "name": "Snapshot curve: Skylights, windows, fan"
+      },
+      "snapshot_horizon_skylights_windows_fan": {
+        "name": "Snapshot horizon value: Skylights, windows, fan"
+      }
+    }
+  }
+}

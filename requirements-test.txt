@@ -1,0 +1,3 @@
+# tests/test_model.py needs only pytest.
+# tests/test_integration.py is skipped unless this is installed (it brings Home Assistant).
+pytest-homeassistant-custom-component
