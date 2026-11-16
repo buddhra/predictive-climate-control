@@ -55,7 +55,7 @@ Scenarios: `closed`, `skylights_open`, `skylights_and_windows`, `skylights_windo
    
    If any step fails, put the previous values back, record nothing, and report the failure.
 8. **Append one row to `docs/review-log.md`:** date, clean stretches found, forecast misses from step 5, verdict with its reasons, and any values changed (old → new).
-9. **Run `python3 -m pytest -q`,** then commit, push to the session's branch, open a pull request and merge it, subject to the limits above.
+9. **Run `python3 -m pytest -q`** (install it first with `pip install pytest` if the session lacks it), then commit, push to the session's branch, open a pull request and merge it, subject to the limits above.
 10. **Finish with a short summary** as the last message of the session; that is what the notification shows. Lead with whether anything changed. Then: clean stretches today, the 9pm misses, and the verdict's main reason. Say "one day" when a number rests on one day. If something changed, give the old and new values and say that replying "revert" in the session puts them back.
 
 ## Reverting
