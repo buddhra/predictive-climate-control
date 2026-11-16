@@ -41,6 +41,12 @@ Step 1 was done on 2026-11-15 from `docs/model.md`, because the legacy YAML was 
 
 Step 2 started 2026-11-16; procedure and log are in `docs/parallel-run.md`. The integration is installed with the legacy mass sensor and `weather.home` (met.no) as inputs. Its entity IDs carry the area prefix: `sensor.master_bedroom_predictive_climate_control_*`. A full 15-hour curve matched the legacy sensors exactly in all four scenarios on an overcast morning, which confirms unrounded carry between steps; the UV term still needs a sunny day.
 
+Step 4 started 2026-11-16. Backtests on 25 clean stretches and a proposed set of option values are in `docs/findings-2026-11-16.md`; the owner chose to apply the proposal at cut-over without a forward test. Overnight accuracy matters least to the owner.
+
+### Daily review
+
+A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and changing them needs the owner.
+
 ## Design requirements
 
 - **No house-specific values in code.** Entity IDs, setpoints, and coefficients belong in the config entry and its options. This repo is public.
