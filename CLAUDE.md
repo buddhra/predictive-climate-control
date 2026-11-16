@@ -39,7 +39,7 @@ Step 1 was done on 2026-11-15 from `docs/model.md`, because the legacy YAML was 
 - Snapshot curve state = the frozen curve's value at index `floor(hours since 21:02)`. This matches the legacy sensor at 8:01pm on 2026-11-15 (index 22).
 - The fan scenario subtracts a fixed 0.05 (`fan_alpha_reference`), not the closed rate. If step 4 lowers the closed rate, decide which was meant.
 
-For step 2, set the integration's optional mass entity to the legacy `sensor.indoor_thermal_mass_estimate` so the curves are comparable from the first refresh.
+Step 2 started 2026-11-16; procedure and log are in `docs/parallel-run.md`. The integration is installed with the legacy mass sensor and `weather.home` (met.no) as inputs. Its entity IDs carry the area prefix: `sensor.master_bedroom_predictive_climate_control_*`. A full 15-hour curve matched the legacy sensors exactly in all four scenarios on an overcast morning, which confirms unrounded carry between steps; the UV term still needs a sunny day.
 
 ## Design requirements
 
