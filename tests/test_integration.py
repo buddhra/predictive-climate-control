@@ -129,7 +129,7 @@ async def test_nightly_snapshot_freezes_and_promotes(hass, house, freezer):
     curve = state.attributes["hourly_forecast"]
     assert len(curve) == 24
     assert state.attributes["computed_at"] == "2026-11-15T21:02:00-08:00"
-    assert float(state.state) == curve[0]
+    assert float(state.state) == 72.1  # the starting temperature, until the first promotion
     assert float(hass.states.get(horizon_id).state) == curve[-1]
 
     # The frozen curve does not move when the live forecast refreshes with new inputs...
@@ -137,6 +137,9 @@ async def test_nightly_snapshot_freezes_and_promotes(hass, house, freezer):
     await _tick(hass, freezer, datetime(2026, 11, 15, 21, 15, tzinfo=TZ))
     assert hass.states.get(curve_id).attributes["hourly_forecast"] == curve
     # ...and its state is promoted at one minute past each hour.
+    assert float(hass.states.get(curve_id).state) == 72.1
+    await _tick(hass, freezer, datetime(2026, 11, 15, 22, 1, tzinfo=TZ))
+    assert float(hass.states.get(curve_id).state) == curve[0]
     await _tick(hass, freezer, datetime(2026, 11, 15, 23, 1, tzinfo=TZ))
     assert float(hass.states.get(curve_id).state) == curve[1]
     await _tick(hass, freezer, datetime(2026, 11, 16, 20, 1, tzinfo=TZ))

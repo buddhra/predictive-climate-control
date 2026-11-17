@@ -36,7 +36,7 @@ Step 1 was done on 2026-11-15 from `docs/model.md`, because the legacy YAML was 
 - The mass sensor updates at the top of the hour from its unrounded previous value, and starts at the current air temperature.
 - The fan's assumed power depends only on the starting indoor temperature.
 - Missing `cloud_coverage` or `uv_index` in a forecast entry counts as 0.
-- Snapshot curve state = the frozen curve's value at index `floor(hours since 21:02)`. This matches the legacy sensor at 8:01pm on 2026-11-15 (index 22).
+- Snapshot curve state: confirmed against the legacy sensor on 2026-11-16. From the freeze until 22:01 it is the starting indoor temperature; each promotion at one minute past the hour then moves one value along the curve (22:01 shows the first value, 21:01 the next day the last). Version 0.1.0 showed the first value from the freeze; 0.1.1 fixes that.
 - The fan scenario subtracts a fixed 0.05 (`fan_alpha_reference`), not the closed rate. If step 4 lowers the closed rate, decide which was meant.
 
 Step 2 started 2026-11-16; procedure and log are in `docs/parallel-run.md`. The integration is installed with the legacy mass sensor and `weather.home` (met.no) as inputs. Its entity IDs carry the area prefix: `sensor.master_bedroom_predictive_climate_control_*`. A full 15-hour curve matched the legacy sensors exactly in all four scenarios on an overcast morning, which confirms unrounded carry between steps; the UV term still needs a sunny day.

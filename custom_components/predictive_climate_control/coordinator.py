@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_UNIT_OF_MEASUREMENT, UnitOfTemperature
@@ -42,6 +42,7 @@ class ForecastData:
     computed_at: datetime
     horizon_end: datetime
     forecasts: dict  # scenario -> model.Forecast
+    start_air: float = 0.0  # indoor temperature the forecast started from, F
 
 
 class ForecastCoordinator(DataUpdateCoordinator[ForecastData]):
@@ -188,6 +189,7 @@ class ForecastCoordinator(DataUpdateCoordinator[ForecastData]):
             horizon_end=horizon_end,
             forecasts={s: model.forecast(s, air, mass, hours, coefficients)
                        for s in model.SCENARIOS},
+            start_air=air,
         )
 
     async def _async_update_data(self) -> ForecastData:
@@ -202,18 +204,28 @@ class ForecastCoordinator(DataUpdateCoordinator[ForecastData]):
             return
         self.snapshot = {
             "computed_at": data.computed_at.isoformat(),
+            "start": round(data.start_air, 1),
             "curves": {s: f.hourly for s, f in data.forecasts.items()},
         }
         self._save()
         self.async_update_listeners()
 
     def snapshot_value_now(self, scenario: str) -> float | None:
-        """The frozen curve's value for the current hour."""
+        """The frozen curve's value for the current hour.
+
+        Until the first promotion (one minute past the next hour) this is the indoor
+        temperature the curve started from; each promotion then moves one value along.
+        """
         if not self.snapshot:
             return None
         curve = self.snapshot["curves"].get(scenario)
         computed_at = dt_util.parse_datetime(self.snapshot["computed_at"])
         if not curve or computed_at is None:
             return None
-        index = int((dt_util.now() - computed_at).total_seconds() // 3600)
-        return curve[max(0, min(len(curve) - 1, index))]
+        first_promotion = computed_at.replace(minute=PROMOTE_MINUTE, second=0, microsecond=0)
+        if first_promotion <= computed_at:
+            first_promotion += timedelta(hours=1)
+        promotions = int((dt_util.now() - first_promotion).total_seconds() // 3600) + 1
+        if promotions <= 0:
+            return self.snapshot.get("start", curve[0])
+        return curve[min(len(curve), promotions) - 1]
