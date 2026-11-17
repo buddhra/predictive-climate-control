@@ -20,7 +20,7 @@ Other points:
 
 - Nov 7: the night-before closed forecast said 68.3 °F at 9pm; actual was about 71.0 °F.
 - Nov 15, 7pm–8:15pm, closed, outside about 10 °F cooler: the bedroom lost about 0.1 °F per hour. The forecast assumed about 0.9 °F per hour.
-- Nov 15: the heat budget heated at noon toward a forecast 67.1 °F at 9pm; the room was 72 °F at 8pm. The furnace ran 54 minutes that day, so Nov 15 before 1:17pm is not clean data.
+- Nov 15: the heat budget heated at noon toward a forecast 67.1 °F at 9pm; the room was 72 °F at 8pm. The furnace ran that morning and around midday (the 54 minutes first reported here came from an unreliable signal; see `findings-2026-11-17.md`), so Nov 15 before 1:17pm is not clean data.
 
 All five days were sunny or hazy and 66–77 °F. There is no cold, cloudy closed day in the data.
 

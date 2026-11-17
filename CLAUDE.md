@@ -85,3 +85,4 @@ Not yet confirmed: whether an update check can be forced sooner, and whether the
 
 - Legacy template YAML: in the Home Assistant config under `templates/` (`trigger_climate_live_forecast.yaml`, `trigger_climate_forecast.yaml`, `trigger_forecast_summary.yaml`). The owner keeps a copy, with calibration notes and an accuracy log, in the references folder of their `home-climate-control` skill. Read those for the exact Jinja and the history behind each coefficient.
 - Live data: through the Home Assistant MCP connector for the home instance (the one that has `cover.skylights`).
+- Furnace timing: `sensor.hvac_action` is reliable only from 2026-11-16 5:44pm PST, when a one-minute refresh of the thermostat was added. Earlier start and stop times are approximate (`docs/findings-2026-11-17.md`).
