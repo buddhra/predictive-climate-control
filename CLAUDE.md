@@ -36,16 +36,20 @@ Step 1 was done on 2026-11-15 from `docs/model.md`, because the legacy YAML was 
 - The mass sensor updates at the top of the hour from its unrounded previous value, and starts at the current air temperature.
 - The fan's assumed power depends only on the starting indoor temperature.
 - Missing `cloud_coverage` or `uv_index` in a forecast entry counts as 0.
-- Snapshot curve state = the frozen curve's value at index `floor(hours since 21:02)`. This matches the legacy sensor at 8:01pm on 2026-11-15 (index 22).
+- Snapshot curve state: confirmed against the legacy sensor on 2026-11-16. From the freeze until 22:01 it is the starting indoor temperature; each promotion at one minute past the hour then moves one value along the curve (22:01 shows the first value, 21:01 the next day the last). Version 0.1.0 runs one value ahead of that for all but a minute of each hour (seen 2026-11-17: legacy 62.1, integration 62.7); 0.1.1 fixes it.
 - The fan scenario subtracts a fixed 0.05 (`fan_alpha_reference`), not the closed rate. If step 4 lowers the closed rate, decide which was meant.
 
-Step 2 started 2026-11-16; procedure and log are in `docs/parallel-run.md`. The integration is installed with the legacy mass sensor and `weather.home` (met.no) as inputs. Its entity IDs carry the area prefix: `sensor.master_bedroom_predictive_climate_control_*`. A full 15-hour curve matched the legacy sensors exactly in all four scenarios on an overcast morning, which confirms unrounded carry between steps; the UV term still needs a sunny day.
+Step 2 started 2026-11-16; procedure and log are in `docs/parallel-run.md`. The integration is installed with the legacy mass sensor and `weather.home` (met.no) as inputs. Its entity IDs carry the area prefix: `sensor.master_bedroom_predictive_climate_control_*`. A full 15-hour curve matched the legacy sensors exactly in all four scenarios on an overcast morning, which confirms unrounded carry between steps. The UV term cannot be checked live in November: the weather entity's forecast UV is too low for it to beat the solar floor, so every solar step in the parallel run uses the floor. It is covered only by the offline test against `backtest/replay.py`.
 
 Step 4 started 2026-11-16. Backtests on 25 clean stretches and a proposed set of option values are in `docs/findings-2026-11-16.md`; the owner chose to apply the proposal at cut-over without a forward test. Overnight accuracy matters least to the owner.
 
 ### Daily review
 
-A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and changing them needs the owner.
+A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and loosening them needs the owner.
+
+### Merging
+
+On 2026-11-18 the owner said: "don't wait for me to merge improvements. We can always roll back if needed." Sessions working on this repo may open and merge their own pull requests to `main` without asking, provided the tests pass and the pull request says what changed and why. Tell the owner afterwards what was merged. This is about the repository only. Changes in Home Assistant (cut-over, automations, installing an update, anything beyond the daily review's option values) still need the owner, and so does loosening the daily review's guardrails. A merged code change does not reach the installed integration until the owner updates it in the Marketplace and restarts.
 
 ## Design requirements
 
