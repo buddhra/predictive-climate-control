@@ -45,7 +45,11 @@ Step 4 started 2026-11-16. Backtests on 25 clean stretches and a proposed set of
 
 ### Daily review
 
-A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and changing them needs the owner.
+A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and loosening them needs the owner.
+
+### Merging
+
+On 2026-11-18 the owner said: "don't wait for me to merge improvements. We can always roll back if needed." Sessions working on this repo may open and merge their own pull requests to `main` without asking, provided the tests pass and the pull request says what changed and why. Tell the owner afterwards what was merged. This is about the repository only. Changes in Home Assistant (cut-over, automations, installing an update, anything beyond the daily review's option values) still need the owner, and so does loosening the daily review's guardrails. A merged code change does not reach the installed integration until the owner updates it in the Marketplace and restarts.
 
 ## Design requirements
 
