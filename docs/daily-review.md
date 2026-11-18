@@ -45,7 +45,7 @@ Scenarios: `closed`, `skylights_open`, `skylights_and_windows`, `skylights_windo
      "notes": "skylights closed 11:13, opened 17:47"}]
    ```
    `h0` is the clock hour of the first value; hours run past midnight (25 = 1am). `cloud` is a fraction 0-1. Round temperatures to 2 decimals. Copy numbers exactly; never estimate or fill a gap. If nothing was clean, write no file. Add `"uncertain": true` only when the owner has said the configuration was not what the sensors show.
-5. **Score today's live forecasts.** For each scenario that had a clean stretch reaching 9pm, read the forecast sensor's `hourly_forecast` (history with `minimal_response=false`) as computed nearest 9am, noon, 3pm and 6pm, and compare its last value with the bedroom temperature at 9pm. Only count a lead time if the configuration stayed in that scenario from then until 9pm.
+5. **Score today's live forecasts.** A stretch does not have to reach 9pm. For each clean stretch from step 2 whose `end` is today at or before 9pm, the target hour is its `end` (9pm when the stretch reaches 9pm). Read the forecast sensor's `hourly_forecast` (history with `minimal_response=false`) as computed nearest 9am, noon, 3pm and 6pm. Count a lead time only if it is at or after the stretch's `start` and at least one hour before the target, so the house stayed in that scenario with no furnace or AC from the lead time to the target. The forecast's value for the target hour is counted back from the end of the list: the last value is 9pm, the one before it 8pm, and so on. Compare it with the bedroom temperature at the target hour (state history, as for 9pm). Report each miss as forecast minus actual, with its lead time and its target hour. Never score against an hour after the configuration changed.
 6. **Run `python3 backtest/daily_review.py`.** Fix any `DATA PROBLEM` it prints, or remove the stretch and say so in the log.
 7. **If the verdict is `APPLY`:**
    1. Read the integration's current options (`ha_get_integration` with the entry and `include_schema=true`).
@@ -56,7 +56,7 @@ Scenarios: `closed`, `skylights_open`, `skylights_and_windows`, `skylights_windo
    If any step fails, put the previous values back, record nothing, and report the failure.
 8. **Append one row to `docs/review-log.md`:** date, clean stretches found, forecast misses from step 5, verdict with its reasons, and any values changed (old → new).
 9. **Run `python3 -m pytest -q`,** then commit, push to the session's branch, open a pull request and merge it, subject to the limits above.
-10. **Finish with a short summary** as the last message of the session; that is what the notification shows. Lead with whether anything changed. Then: clean stretches today, the 9pm misses, and the verdict's main reason. Say "one day" when a number rests on one day. If something changed, give the old and new values and say that replying "revert" in the session puts them back.
+10. **Finish with a short summary** as the last message of the session; that is what the notification shows. Lead with whether anything changed. Then: clean stretches today, the forecast misses with their target hour (9pm or earlier), and the verdict's main reason. Say "one day" when a number rests on one day. If something changed, give the old and new values and say that replying "revert" in the session puts them back.
 
 ## Reverting
 
