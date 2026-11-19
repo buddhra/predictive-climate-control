@@ -47,9 +47,14 @@ Step 3 (cut-over) started 2026-11-19 with the owner's go:
 
 - The proposed option values were applied to the integration at 12:42pm and recorded in `backtest/deployed.json`, so the daily review's refinement is now on.
 - **Thermostat Control** reads `sensor.master_bedroom_predictive_climate_control_live_forecast_closed` (one trigger, one variable). To undo, put `sensor.live_forecasted_indoor_temp_closed` back in both places.
-- **Home Climate Control is NOT repointed yet.** It still reads the four legacy `sensor.live_forecasted_indoor_temp_*` sensors (eight variables). With the refitted forecast its open rule would fire about 0.7 °F sooner on a mild evening, and nothing in it checks for rain. Waiting on the owner's decision about a rain guard.
+- **Home Climate Control** reads the four `sensor.master_bedroom_predictive_climate_control_live_forecast_*` sensors (eight variables, repointed 1:20pm). To undo, put the `sensor.live_forecasted_indoor_temp_` prefix back in those eight.
+- **Rain.** The skylights close themselves when their rain sensor is wet, ignore open commands while wet, and do not tell Home Assistant (`cover.skylights` is `assumed_state`). The owner's rules, built 2026-11-19:
+  - `binary_sensor.rain_observed`: the NWS station reports rain ("confident"). `binary_sensor.rain_possible`: NWS or met.no reports rain.
+  - Home Climate Control's open rule waits until rain has not been observed for 30 minutes.
+  - `automation.skylight_rain_sync`: rain observed while the cover reads open → command close. Rain only possible while it reads open → set `input_boolean.skylights_resync_pending`, and once neither source has shown rain for 30 minutes, command open once.
+  - Not yet seen working in real rain with the skylights open.
 - The heat budget (`input_boolean.heat_budget`) stays off. The owner wants it on once the new forecasts are reasonably accurate; judge that from the daily review's scores.
-- Two dashboards (`default` and `lovelace`) still show the legacy sensors.
+- The "Climate Forecast" dashboard view was repointed to the new sensors. No automation, script, helper or dashboard references a legacy forecast sensor any more.
 - The legacy YAML stays until the owner agrees to remove it. The integration's mass input is the legacy `sensor.indoor_thermal_mass_estimate`; clear that option (so it uses its own estimate) before the YAML is removed.
 
 ### Daily review
