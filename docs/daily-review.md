@@ -22,6 +22,7 @@ The owner approved this on 2026-11-16: apply within guardrails and report afterw
 | Windows | `binary_sensor.master_bedroom_window_sensor_window`, `binary_sensor.living_room_left_window`, `binary_sensor.living_room_right_window` (`on` = open; ignore flaps of a few seconds) |
 | Fan | `sensor.master_bedroom_window_fan_power` (running above 10 W) |
 | Furnace | `sensor.hvac_action` (`heating` = running) |
+| Rain | `binary_sensor.rain_observed` (NWS station reports rain), `binary_sensor.rain_possible` (NWS or met.no reports rain) |
 | Portable AC | `climate.midea_air_conditioner_climate`, attribute `power` |
 | Forecasts | `sensor.master_bedroom_predictive_climate_control_live_forecast_<scenario>` |
 
@@ -36,7 +37,7 @@ Scenarios: `closed`, `skylights_open`, `skylights_and_windows`, `skylights_windo
    - `skylights_and_windows`: skylights open, bedroom window open, fan off
    - `skylights_windows_fan`: skylights open, bedroom window open, fan above 10 W
    
-   Drop any hour in which the furnace was heating or the AC was on. Keep a stretch only if it covers at least three whole hours: `start` is the first top of the hour inside it and `end` the last.
+   Drop any hour in which the furnace was heating or the AC was on. For the three open scenarios, also drop any hour in which `binary_sensor.rain_possible` was on, and the 30 minutes after it: the skylights close themselves in rain without telling Home Assistant, so the cover's state cannot be trusted then. Keep a stretch only if it covers at least three whole hours: `start` is the first top of the hour inside it and `end` the last.
 3. **Pull hourly means** (statistics, `period="hour"`, `mean`) for the bedroom, mass, the three weather sensors and fan power, from one hour before `start` through the hour beginning at `end`.
 4. **Write `backtest/data/YYYY-MM-DD.json`** (the date the stretch starts): a list with one object per stretch.
    ```json
