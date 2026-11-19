@@ -1,14 +1,27 @@
 {
-  "cutover": false,
-  "last_change": "2026-11-16",
+  "cutover": true,
+  "last_change": "2026-11-19",
   "values": {
-    "alpha_outdoor": 0.05,
-    "alpha_mass_to_air": 0.05,
-    "solar_floor": 0.7,
-    "solar_center_hour": 11,
-    "uv_coeff": 0.13,
+    "alpha_outdoor": 0.015,
+    "alpha_mass_to_air": 0,
+    "solar_floor": 0.5,
+    "solar_center_hour": 15,
+    "uv_coeff": 0.08,
     "skylight_vent_alpha": 0.005,
-    "window_vent_alpha": 0.01
+    "window_vent_alpha": 0.02
   },
-  "history": []
+  "history": [
+    {
+      "until": "2026-11-19",
+      "values": {
+        "alpha_outdoor": 0.05,
+        "alpha_mass_to_air": 0.05,
+        "solar_floor": 0.7,
+        "solar_center_hour": 11,
+        "uv_coeff": 0.13,
+        "skylight_vent_alpha": 0.005,
+        "window_vent_alpha": 0.01
+      }
+    }
+  ]
 }
