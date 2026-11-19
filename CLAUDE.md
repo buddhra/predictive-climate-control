@@ -43,6 +43,15 @@ Step 2 ran 2026-11-16 to 2026-11-19 and passed: every forecast value compared wa
 
 Step 4 started 2026-11-16. Backtests on 25 clean stretches and a proposed set of option values are in `docs/findings-2026-11-16.md`; the owner chose to apply the proposal at cut-over without a forward test. Overnight accuracy matters least to the owner.
 
+Step 3 (cut-over) started 2026-11-19 with the owner's go:
+
+- The proposed option values were applied to the integration at 12:42pm and recorded in `backtest/deployed.json`, so the daily review's refinement is now on.
+- **Thermostat Control** reads `sensor.master_bedroom_predictive_climate_control_live_forecast_closed` (one trigger, one variable). To undo, put `sensor.live_forecasted_indoor_temp_closed` back in both places.
+- **Home Climate Control is NOT repointed yet.** It still reads the four legacy `sensor.live_forecasted_indoor_temp_*` sensors (eight variables). With the refitted forecast its open rule would fire about 0.7 °F sooner on a mild evening, and nothing in it checks for rain. Waiting on the owner's decision about a rain guard.
+- The heat budget (`input_boolean.heat_budget`) stays off. The owner wants it on once the new forecasts are reasonably accurate; judge that from the daily review's scores.
+- Two dashboards (`default` and `lovelace`) still show the legacy sensors.
+- The legacy YAML stays until the owner agrees to remove it. The integration's mass input is the legacy `sensor.indoor_thermal_mass_estimate`; clear that option (so it uses its own estimate) before the YAML is removed.
+
 ### Daily review
 
 A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and loosening them needs the owner.
