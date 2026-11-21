@@ -10,5 +10,17 @@
   "uv": [0.25, 0.75, 1.55, 2.3, 2.65, 2.5, 1.9, 1.1, 0.45, 0.1, 0, 0, 0],
   "cloud": [0.824, 0.847, 0.781, 0.773, 0.719, 0.371, 0.339, 0.472, 0.422, 0.25, 0.129, 0.039, 0.006],
   "fan": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  "notes": "skylights closed and all three windows closed throughout (unavailable blips of under a minute at 03:03 and 03:09 ignored); furnace heated 06:03-06:14, 06:42-06:47 and 08:30-08:37 on 2026-11-19, so hours 6 and 8 are dropped; hour 7 alone is 1 clean hour, not kept; AC off; fan 0 W; this stretch runs from the 08:37 furnace stop past 21:00, but the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20; option values were changed at 12:42 (cut-over), which does not affect these measurements"}
+  "notes": "skylights closed and all three windows closed throughout (unavailable blips of under a minute at 03:03 and 03:09 ignored); furnace heated 06:03-06:14, 06:42-06:47 and 08:30-08:37 on 2026-11-19, so hours 6 and 8 are dropped; hour 7 alone is 1 clean hour, not kept; AC off; fan 0 W; this stretch runs from the 08:37 furnace stop past 21:00, but the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20; option values were changed at 12:42 (cut-over), which does not affect these measurements"},
+ {"label": "closed overnight",
+  "scenario": "closed",
+  "h0": 20,
+  "start": 21,
+  "end": 29,
+  "bed": [70.84, 70.64, 70.44, 70.27, 70.11, 69.9, 69.68, 69.44, 69.18, 69.0],
+  "mass": [70.6, 70.6, 70.6, 70.6, 70.6, 70.5, 70.4, 70.3, 70.2, 70.1],
+  "out": [47.5, 45.5, 42.75, 41.25, 41, 40.25, 40, 40, 39.25, 39],
+  "uv": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "cloud": [0.006, 0.0, 0.064, 0.642, 0.828, 0.834, 0.848, 0.857, 0.854, 0.84],
+  "fan": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  "notes": "skylights closed (unavailable blip of under a minute at 02:10 ignored); furnace heated 05:45-05:59, 06:06-06:12, 06:33-06:40, 07:19-07:27, 08:39-08:46 and 16:32-16:40 on 2026-11-20, so hours 5-8 and 16 are dropped; all three windows closed throughout; AC off; fan 0 W; no rain reported; this stretch continues the 2026-11-19 day stretch (closed since the 08:37 furnace stop) from 21:00 to the 05:45 furnace start; the last value (hour beginning 05:00) includes that furnace run"}
 ]
