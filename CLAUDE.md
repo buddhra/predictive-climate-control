@@ -62,7 +62,7 @@ Step 3 (cut-over) started 2026-11-19 with the owner's go:
   - The close rule closes whenever downstairs is below `heat_floor`, at any hour, so heat can run. Before, that only applied 4am–5pm.
   - The 8pm check sends a message only when the 9pm forecast for the current configuration is above comfort high (it used to test the bedroom reading at 8pm), and the window messages say when the skylights also need opening.
   - Thermostat Control's notifications name the trigger without the doubled device name ("Skylights", "Master Bedroom Window").
-  - Still state-based and not yet reviewed against this rule: Thermostat Control's evening, night and away branches are gated by `binary_sensor.forecast_cool`, whose definition has not been located.
+  - `binary_sensor.forecast_cool` and `binary_sensor.forecast_comfortable` (once-a-day labels from the old YAML templates, recalculated at 1am) were removed from Thermostat Control's home-day, evening, night and away heat rules the same evening, with the owner's go. They had switched those rules off for days at a time (for example 2026-11-04 to 11-09). Heat now depends on mode, setpoint, outside temperature, and windows and skylights being closed.
 - The heat budget (`input_boolean.heat_budget`) stays off. The owner wants it on once the new forecasts are reasonably accurate; judge that from the daily review's scores.
 - The "Climate Forecast" dashboard view was repointed to the new sensors. No automation, script, helper or dashboard references a legacy forecast sensor any more.
 - The legacy YAML stays until the owner agrees to remove it. The integration's mass input is the legacy `sensor.indoor_thermal_mass_estimate`; clear that option (so it uses its own estimate) before the YAML is removed.
