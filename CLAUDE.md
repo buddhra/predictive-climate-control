@@ -53,6 +53,10 @@ Step 3 (cut-over) started 2026-11-19 with the owner's go:
   - Home Climate Control's open rule waits until rain has not been observed for 30 minutes.
   - `automation.skylight_rain_sync`: rain observed while the cover reads open → command close. Rain only possible while it reads open → set `input_boolean.skylights_resync_pending`, and once neither source has shown rain for 30 minutes, command open once.
   - Not yet seen working in real rain with the skylights open.
+- **Thermostat Control fixes, 2026-11-20** (owner felt the house cool; downstairs 68.5 °F with the target stuck at the 60 °F away setpoint from 10:07am to 4:10pm):
+  - Cause 1: `budget_met` (closed 9pm forecast ≥ the evening target, or peak ≥ comfort high) gated the home-setpoint rule even with the heat budget off. Under the legacy forecast it was almost never true; under the refitted forecast it is true most afternoons. It is now false unless `input_boolean.heat_budget` is on. The claim made at cut-over that Thermostat Control would behave the same with the heat budget off was wrong.
+  - Cause 2: every heat-on branch required `cover.skylights` to read `closed`, so an offline skylight controller blocked all heat. They now accept `closed`, `unavailable` or `unknown`. `automation.skylight_controller_offline` notifies after 30 minutes offline.
+  - When the heat budget is turned on, `budget_met` will again hold the home setpoint back on days the bedroom forecast is warm enough, while downstairs can sit near its 68 °F floor. Raise that with the owner before turning it on.
 - The heat budget (`input_boolean.heat_budget`) stays off. The owner wants it on once the new forecasts are reasonably accurate; judge that from the daily review's scores.
 - The "Climate Forecast" dashboard view was repointed to the new sensors. No automation, script, helper or dashboard references a legacy forecast sensor any more.
 - The legacy YAML stays until the owner agrees to remove it. The integration's mass input is the legacy `sensor.indoor_thermal_mass_estimate`; clear that option (so it uses its own estimate) before the YAML is removed.
