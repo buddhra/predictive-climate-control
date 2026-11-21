@@ -57,6 +57,12 @@ Step 3 (cut-over) started 2026-11-19 with the owner's go:
   - Cause 1: `budget_met` (closed 9pm forecast ≥ the evening target, or peak ≥ comfort high) gated the home-setpoint rule even with the heat budget off. Under the legacy forecast it was almost never true; under the refitted forecast it is true most afternoons. It is now false unless `input_boolean.heat_budget` is on. The claim made at cut-over that Thermostat Control would behave the same with the heat budget off was wrong.
   - Cause 2: every heat-on branch required `cover.skylights` to read `closed`, so an offline skylight controller blocked all heat. They now accept `closed`, `unavailable` or `unknown`. `automation.skylight_controller_offline` notifies after 30 minutes offline.
   - When the heat budget is turned on, `budget_met` will again hold the home setpoint back on days the bedroom forecast is warm enough, while downstairs can sit near its 68 °F floor. Raise that with the owner before turning it on.
+- **Need, not state (owner's rule, 2026-11-20):** "It should all work on what is needed, not what happens to be happening at the time." Home Climate Control was reworked the same evening after an 8pm "open the windows" message arrived while the skylights stayed shut:
+  - The open rule used to block whenever the thermostat was in heat mode, even idle at the night setpoint. It now blocks when heat is needed: downstairs within 1 °F of `heat_floor` (the daytime floor while home before 19:00, otherwise the night or away setpoint).
+  - The close rule closes whenever downstairs is below `heat_floor`, at any hour, so heat can run. Before, that only applied 4am–5pm.
+  - The 8pm check sends a message only when the 9pm forecast for the current configuration is above comfort high (it used to test the bedroom reading at 8pm), and the window messages say when the skylights also need opening.
+  - Thermostat Control's notifications name the trigger without the doubled device name ("Skylights", "Master Bedroom Window").
+  - Still state-based and not yet reviewed against this rule: Thermostat Control's evening, night and away branches are gated by `binary_sensor.forecast_cool`, whose definition has not been located.
 - The heat budget (`input_boolean.heat_budget`) stays off. The owner wants it on once the new forecasts are reasonably accurate; judge that from the daily review's scores.
 - The "Climate Forecast" dashboard view was repointed to the new sensors. No automation, script, helper or dashboard references a legacy forecast sensor any more.
 - The legacy YAML stays until the owner agrees to remove it. The integration's mass input is the legacy `sensor.indoor_thermal_mass_estimate`; clear that option (so it uses its own estimate) before the YAML is removed.
@@ -101,6 +107,7 @@ Not yet confirmed: whether an update check can be forced sooner, and whether the
 - **Fit against the weather entity's values**, since that is what the forecast can see. Note that the house's own outside sensor disagrees with it (findings doc).
 - **Convert times carefully.** Home Assistant statistics are epoch milliseconds in UTC; state history and logbook are local time.
 - **Prefer the smallest change that fixes the problem.**
+- **Decide on need, not on current state.** An automation rule should ask whether heating or cooling is needed (a temperature against its target, a forecast against the comfort band), not what mode a device happens to be in.
 - Ask the owner before anything that changes live behaviour.
 
 ## Where the live pieces are
