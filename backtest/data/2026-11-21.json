@@ -1,0 +1,14 @@
+[
+ {"label": "closed day",
+  "scenario": "closed",
+  "h0": 6,
+  "start": 7,
+  "end": 20,
+  "bed": [69.6, 69.42, 69.07, 68.67, 68.52, 68.37, 68.38, 68.53, 68.61, 68.88, 68.93, 68.9, 68.9, 68.8, 68.71],
+  "mass": [69.9, 69.9, 69.8, 69.7, 69.6, 69.5, 69.4, 69.3, 69.2, 69.2, 69.2, 69.2, 69.2, 69.2, 69.2],
+  "out": [38.25, 38.0, 41.75, 48.25, 53.75, 57.25, 57.25, 57.0, 60.0, 61.0, 60.0, 58.0, 54.0, 52.0, 50.75],
+  "uv": [0.0, 0.075, 0.325, 1.0, 1.875, 2.625, 2.875, 2.9, 2.4, 1.5, 0.7, 0.2, 0.0, 0.0, 0.0],
+  "cloud": [0.254, 0.336, 0.353, 0.096, 0.213, 0.797, 0.869, 0.836, 0.773, 0.711, 0.914, 0.93, 0.992, 0.797, 0.994],
+  "fan": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  "notes": "skylights closed and all three windows closed throughout, with no unavailable blips; AC off; fan 0 W; no rain reported; furnace heated 05:16-05:31, 05:39-05:46 and 06:00-06:06 on 2026-11-21, so hours 5 and 6 are dropped; this stretch runs from the 06:06 furnace stop past 21:00, but the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20; the first value (hour beginning 06:00, before start) includes the 06:00-06:06 furnace run"}
+]

@@ -22,5 +22,17 @@
   "uv": [0.575, 0.15, 0, 0, 0],
   "cloud": [0.17, 0.082, 0.051, 0.051, 0.012],
   "fan": [0.0, 0.0, 0.0, 0.0, 0.0],
-  "notes": "cover.skylights was unavailable 13:55-16:18, read open 16:18-16:31, then closed; furnace heated 05:45-05:59, 06:06-06:12, 06:33-06:40, 07:19-07:27, 08:39-08:46 and 16:32-16:40 on 2026-11-20, so hours 5-8 and 16 are dropped; all three windows closed throughout; AC off; fan 0 W; no rain reported; this stretch runs from the 16:40 furnace stop past 21:00, but the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20"}
+  "notes": "cover.skylights was unavailable 13:55-16:18, read open 16:18-16:31, then closed; furnace heated 05:45-05:59, 06:06-06:12, 06:33-06:40, 07:19-07:27, 08:39-08:46 and 16:32-16:40 on 2026-11-20, so hours 5-8 and 16 are dropped; all three windows closed throughout; AC off; fan 0 W; no rain reported; this stretch runs from the 16:40 furnace stop past 21:00, but the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20"},
+ {"label": "closed overnight",
+  "scenario": "closed",
+  "h0": 20,
+  "start": 21,
+  "end": 29,
+  "bed": [70.8, 70.69, 70.48, 70.33, 70.16, 69.91, 69.65, 69.36, 69.05, 68.88],
+  "mass": [70.4, 70.4, 70.4, 70.4, 70.4, 70.4, 70.3, 70.2, 70.1, 70.0],
+  "out": [46.25, 43.5, 41.5, 40.5, 40.0, 39.5, 39.0, 40.0, 41.0, 40.0],
+  "uv": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  "cloud": [0.012, 0.0, 0.406, 0.57, 0.566, 0.808, 0.781, 0.375, 0.0, 0.004],
+  "fan": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  "notes": "skylights closed and all three windows closed throughout, with no unavailable blips; AC off; fan 0 W; no rain reported; furnace heated 05:16-05:31, 05:39-05:46 and 06:00-06:06 on 2026-11-21, so hours 5 and 6 are dropped; this stretch continues the 2026-11-20 evening stretch (closed since the 16:40 furnace stop) from 21:00 to the 05:16 furnace start; the last value (hour beginning 05:00) includes that furnace run"}
 ]
