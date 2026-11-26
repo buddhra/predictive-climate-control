@@ -1,0 +1,14 @@
+[
+ {"label": "closed day",
+  "scenario": "closed",
+  "h0": 0,
+  "start": 1,
+  "end": 20,
+  "bed": [64.44, 64.39, 64.25, 64.2, 64.05, 64.02, 63.87, 63.8, 63.68, 63.69, 63.84, 63.97, 64.25, 64.49, 64.74, 65.02, 65.22, 65.31, 65.49, 65.62, 65.66],
+  "mass": [64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.1, 64.2, 64.3, 64.4, 64.5, 64.6, 64.7],
+  "out": [48, 47.25, 47, 46.25, 46, 47.0, 45.0, 44.0, 44, 49.0, 57.0, 64.75, 67.5, 69, 69, 68.75, 67.0, 62.75, 57.5, 55.0, 52.5],
+  "uv": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 1.1, 2.2, 2.875, 2.975, 2.375, 1.45, 0.575, 0.15, 0, 0, 0],
+  "cloud": [1.0, 1.0, 1.0, 1.0, 1.0, 0.648, 0.906, 0.937, 0.867, 0.109, 0.094, 0.016, 0.014, 0.006, 0.0, 0.0, 0.0, 0.002, 0.031, 0.062, 0.089],
+  "fan": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  "notes": "continues the 2026-11-24 closed overnight stretch with no break, split at 1am (owner's rule, 2026-11-22: an unbroken day counts on its own date): skylights closed and all three windows closed from 21:00 on 2026-11-24 past 21:00 on 2026-11-25, with no skylight unavailable blips; furnace idle for the whole window (last ran 06:00-06:06 on 2026-11-21); fan 0 W; AC off; no rain reported (rain_possible and rain_observed off throughout); the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20"}
+]
