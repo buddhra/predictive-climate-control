@@ -69,7 +69,7 @@ Step 3 (cut-over) started 2026-11-19 with the owner's go:
 
 ### Daily review
 
-A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and loosening them needs the owner.
+A scheduled Claude session reviews performance every evening, following `docs/daily-review.md`. The owner approved (2026-11-16) that it may change the integration's option values when `backtest/daily_review.py` says `APPLY`, and may merge its own data and log updates to `main`. Those two permissions are exceptions to "ask the owner before anything that changes live behaviour" and go no further: the guardrails are in that script and loosening them needs the owner. On 2026-11-25 the owner replaced the script's "five new clean days" rule with blocks of three hours (8 new daytime blocks from at least 2 dates, no worse on the evening blocks, and an option moves only when new data exercises it); see `docs/daily-review.md`.
 
 ### Merging
 
