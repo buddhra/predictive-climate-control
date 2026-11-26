@@ -36,7 +36,21 @@ TUNABLE = {
     "skylight_vent_alpha": (0.005, 0.0, 0.03),
     "window_vent_alpha": (0.01, 0.0, 0.06),
 }
-MIN_NEW_DAYS = 5          # clean days recorded since the last change
+# Evidence needed since the last change (owner, 2026-11-25: blocks of a few hours instead of
+# five whole days). A block is BLOCK_HOURS whole clean hours between DAY_START and DAY_END,
+# cut back from the end of a stretch and replayed from the real temperature at its start.
+BLOCK_HOURS = 3
+DAY_START, DAY_END = 7, 21
+MIN_NEW_BLOCKS = 8        # new blocks recorded since the last change...
+MIN_NEW_DATES = 2         # ...from at least this many dates: one day is not a pattern
+EVENING_FROM = 19         # a block ending at or after this hour is an evening block
+SLACK = 0.05              # squared error a check may rise by before it counts as worse
+# An option may move only when the new data exercises it.
+VENT_SCENARIOS = {
+    "skylight_vent_alpha": {"skylights_open"},
+    "window_vent_alpha": {"skylights_and_windows", "skylights_windows_fan"},
+}
+SOLAR_OPTIONS = {"solar_floor", "solar_center_hour", "uv_coeff"}
 MIN_IMPROVEMENT = 0.05    # the objective must fall by at least this fraction
 # How much worse (as a fraction) each group may get. Overnight matters least to the owner.
 TOLERANCE = {"closed": 0.02, "open_day": 0.02, "night": 0.10, "fan": 0.10}
@@ -112,6 +126,33 @@ def load():
     return stretches, new_days, problems
 
 
+def blocks_of(d):
+    """Non-overlapping daytime blocks of one stretch, cut back from its end."""
+    out, end, first = [], min(d["end"], DAY_END), max(d["start"], DAY_START)
+    while end - BLOCK_HOURS >= first:
+        out.append(dict(d, start=end - BLOCK_HOURS, end=end))
+        end -= BLOCK_HOURS
+    return out[::-1]
+
+
+def block_error(block, values):
+    return sum((p - a) ** 2 for _, p, a in simulate(block, Coefficients(**values)))
+
+
+def movable(new_stretches, new_blocks):
+    """The options the new data exercises; the others stay where they are."""
+    def sunlit(b):
+        return any(v > 0 for v in b.get("uv", [])[b["start"] - b["h0"]:b["end"] - b["h0"] + 1])
+    options = set()
+    if new_blocks:
+        options |= {"alpha_outdoor", "alpha_mass_to_air"}
+    if any(sunlit(b) for b in new_blocks):
+        options |= SOLAR_OPTIONS
+    scenarios = {d["scenario"] for d in new_stretches}
+    options |= {o for o, needed in VENT_SCENARIOS.items() if scenarios & needed}
+    return options
+
+
 def score(values, stretches, names=None):
     """Squared error per group for a set of option values."""
     c = Coefficients(**values)
@@ -127,12 +168,16 @@ def objective(totals):
     return totals["closed"] + totals["open_day"] + NIGHT_WEIGHT * totals["night"]
 
 
-def candidates(values):
-    """Every combination of one step down, no change, or one step up, kept inside the bounds."""
+def candidates(values, options=TUNABLE):
+    """Every combination of one step down, no change, or one step up, kept inside the bounds.
+    Only the options named may move."""
     choices = []
     for option, (step, low, high) in TUNABLE.items():
         now = values[option]
-        choices.append(sorted({round(min(high, max(low, now + k * step)), 4) for k in (-1, 0, 1)}))
+        if option in options:
+            choices.append(sorted({round(min(high, max(low, now + k * step)), 4) for k in (-1, 0, 1)}))
+        else:
+            choices.append([now])
     for combo in itertools.product(*choices):
         yield dict(zip(TUNABLE, combo))
 
@@ -142,32 +187,49 @@ def decide(deployed, stretches, new_days):
     values = deployed["values"]
     current = score(values, stretches)
     recent = {d: n for d, n in new_days.items() if d > deployed["last_change"]}
-    recent_names = {n for names in recent.values() for n in names}
-    def within_tolerance(totals):
-        return all(totals[g] <= current[g] * (1 + allowed) + 0.05 for g, allowed in TOLERANCE.items())
+    new_stretches = [stretches[n] for names in recent.values() for n in names]
+    blocks = [b for d in new_stretches for b in blocks_of(d)]
+    dates = [d for d, names in recent.items() if any(blocks_of(stretches[n]) for n in names)]
+    evening = [b for b in blocks if b["end"] >= EVENING_FROM]
+    before = [block_error(b, values) for b in blocks]
 
-    # The best change among those that leave no group worse than its tolerance allows.
-    scored = ((v, score(v, stretches)) for v in candidates(values))
-    best, proposed = min(((v, t) for v, t in scored if within_tolerance(t)),
+    def new_data(v):
+        """(error on the new blocks, on the evening ones, blocks better, blocks worse)."""
+        after = [block_error(b, v) for b in blocks]
+        return (sum(after), sum(e for b, e in zip(blocks, after) if b["end"] >= EVENING_FROM),
+                sum(a < e - 1e-9 for a, e in zip(after, before)),
+                sum(a > e + 1e-9 for a, e in zip(after, before)))
+    base = new_data(values)
+
+    def acceptable(v, totals):
+        if v == values:
+            return True
+        if any(totals[g] > current[g] * (1 + allowed) + SLACK for g, allowed in TOLERANCE.items()):
+            return False
+        if not blocks:
+            return True
+        total, late, better, worse = new_data(v)
+        return total <= base[0] + SLACK and late <= base[1] + SLACK and better > worse
+
+    # The best change among those that move only exercised options, leave no group worse
+    # than its tolerance allows, and hold up on the new blocks (evening ones included).
+    scored = ((v, score(v, stretches)) for v in candidates(values, movable(new_stretches, blocks)))
+    best, proposed = min(((v, t) for v, t in scored if acceptable(v, t)),
                          key=lambda vt: objective(vt[1]))
-    tables = dict(current=current, proposed=proposed)
+    tables = dict(current=current, proposed=proposed, blocks=len(blocks), dates=len(dates),
+                  evening=len(evening), new_before=base, new_after=new_data(best))
     reasons = []
     if not deployed.get("cutover"):
         reasons.append("cut-over has not been recorded, so refinement is off")
-    if len(recent) < MIN_NEW_DAYS:
-        reasons.append(f"{len(recent)} new clean days since {deployed['last_change']}, need {MIN_NEW_DAYS}")
+    if len(blocks) < MIN_NEW_BLOCKS or len(dates) < MIN_NEW_DATES:
+        reasons.append(f"{len(blocks)} new {BLOCK_HOURS}-hour blocks from {len(dates)} dates since"
+                       f" {deployed['last_change']}, need {MIN_NEW_BLOCKS} from {MIN_NEW_DATES}")
     if best == values:
-        reasons.append("no neighbouring values score better")
+        reasons.append("no acceptable neighbouring values score better")
     else:
         gain = 1 - objective(proposed) / objective(current)
         if gain < MIN_IMPROVEMENT:
             reasons.append(f"best change improves the objective by {gain:.1%}, need {MIN_IMPROVEMENT:.0%}")
-        if recent_names:
-            before = objective(score(values, stretches, recent_names))
-            after = objective(score(best, stretches, recent_names))
-            tables["recent"] = (before, after)
-            if after > before:
-                reasons.append(f"worse on the new days alone ({before:.1f} -> {after:.1f})")
     return ("HOLD" if reasons else "APPLY"), reasons, best, tables
 
 
@@ -197,6 +259,11 @@ def main(argv):
         print(f"  {group:9} {tables['current'][group]:7.1f} -> {tables['proposed'][group]:7.1f}")
     print(f"  objective {objective(tables['current']):7.1f} -> {objective(tables['proposed']):7.1f}")
     changes = {k: (deployed["values"][k], v) for k, v in best.items() if v != deployed["values"][k]}
+    t = tables
+    print(f"\nNew since {deployed['last_change']}: {t['blocks']} {BLOCK_HOURS}-hour blocks from {t['dates']} dates"
+          f" ({t['evening']} evening). Squared error on them {t['new_before'][0]:.2f} -> {t['new_after'][0]:.2f}"
+          f" (evening {t['new_before'][1]:.2f} -> {t['new_after'][1]:.2f});"
+          f" {t['new_after'][2]} blocks better, {t['new_after'][3]} worse.")
     print("\nBest bounded change:", changes or "none")
     print(f"\nVERDICT: {verdict}")
     for r in reasons:

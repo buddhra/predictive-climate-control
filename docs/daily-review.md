@@ -59,6 +59,18 @@ Scenarios: `closed`, `skylights_open`, `skylights_and_windows`, `skylights_windo
 9. **Run `python3 -m pytest -q`** (install it first with `pip install pytest` if the session lacks it), then commit, push to the session's branch, open a pull request and merge it, subject to the limits above.
 10. **Finish with a short summary** as the last message of the session; that is what the notification shows. Lead with whether anything changed. Then: clean stretches today, the forecast misses with their target hour (9pm or earlier), and the verdict's main reason. Say "one day" when a number rests on one day. If something changed, give the old and new values and say that replying "revert" in the session puts them back.
 
+## What the script needs before it answers `APPLY`
+
+Changed 2026-11-25 with the owner's go: evidence is counted in blocks of three hours, not in whole days (it used to need five new clean days).
+
+- A **block** is three whole clean hours between 7am and 9pm, cut back from the end of a recorded stretch and replayed from the real temperature at its start. A fully closed day gives four (8-11am, 11am-2pm, 2-5pm, 5-8pm). Overnight hours give none.
+- **At least 8 new blocks since the last change, from at least 2 dates.** One day is still not a pattern.
+- A change must **hold up on the new blocks**: no worse on them in total, no worse on the evening blocks (those ending at 7pm or later, nearest the 9pm hour that matters most), and better on more blocks than it is worse on.
+- **An option moves only when the new data exercises it**: `skylight_vent_alpha` needs a new `skylights_open` stretch, `window_vent_alpha` a new window or fan stretch, the three solar options a new block with UV above zero, and the two alpha options any new block.
+- Unchanged: one step per option per change, the bounds, the per-group tolerances over all stretches, and the 5% minimum improvement.
+
+The script picks the best change that satisfies all of these, so its proposal can be smaller than the unconstrained best fit.
+
 ## Reverting
 
 `backtest/deployed.json` keeps every earlier set under `history`. To revert, submit the last entry's values through the options form, then move it back to `values` in the file and set `last_change` to today.
