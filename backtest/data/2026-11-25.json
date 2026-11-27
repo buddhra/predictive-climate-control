@@ -10,5 +10,17 @@
   "uv": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 1.1, 2.2, 2.875, 2.975, 2.375, 1.45, 0.575, 0.15, 0, 0, 0],
   "cloud": [1.0, 1.0, 1.0, 1.0, 1.0, 0.648, 0.906, 0.937, 0.867, 0.109, 0.094, 0.016, 0.014, 0.006, 0.0, 0.0, 0.0, 0.002, 0.031, 0.062, 0.089],
   "fan": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  "notes": "continues the 2026-11-24 closed overnight stretch with no break, split at 1am (owner's rule, 2026-11-22: an unbroken day counts on its own date): skylights closed and all three windows closed from 21:00 on 2026-11-24 past 21:00 on 2026-11-25, with no skylight unavailable blips; furnace idle for the whole window (last ran 06:00-06:06 on 2026-11-21); fan 0 W; AC off; no rain reported (rain_possible and rain_observed off throughout); the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20"}
+  "notes": "continues the 2026-11-24 closed overnight stretch with no break, split at 1am (owner's rule, 2026-11-22: an unbroken day counts on its own date): skylights closed and all three windows closed from 21:00 on 2026-11-24 past 21:00 on 2026-11-25, with no skylight unavailable blips; furnace idle for the whole window (last ran 06:00-06:06 on 2026-11-21); fan 0 W; AC off; no rain reported (rain_possible and rain_observed off throughout); the hourly mean for the hour beginning 21:00 did not exist when the review ran, so end is 20"},
+ {"label": "closed overnight",
+  "scenario": "closed",
+  "h0": 20,
+  "start": 21,
+  "end": 25,
+  "bed": [65.66, 65.63, 65.54, 65.48, 65.35, 65.3],
+  "mass": [64.7, 64.8, 64.9, 65.0, 65, 65],
+  "out": [52.5, 50.0, 48.5, 48.5, 49, 49],
+  "uv": [0, 0, 0, 0, 0, 0],
+  "cloud": [0.089, 0.171, 0.437, 0.75, 0.813, 0.832],
+  "fan": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  "notes": "continues the closed day stretch above with no break: skylights closed and all three windows closed from 21:00 on 2026-11-25 past 21:00 on 2026-11-26, with no skylight unavailable blips; furnace idle for the whole window (last ran 06:00-06:06 on 2026-11-21); fan 0 W; AC off; no rain reported (rain_possible and rain_observed off throughout); the unbroken stretch is split at 1am (owner's rule, 2026-11-22: an unbroken day counts on its own date), and the rest is in the 2026-11-26 file"}
 ]
